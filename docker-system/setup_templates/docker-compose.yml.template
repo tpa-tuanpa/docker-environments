@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  app_{{PROJECT_NAME}}:
+    build:
+      context: ${GLOBAL_PATH}/php/{{PHP_VERSION}}
+    container_name: {{PROJECT_NAME}}_php
+    volumes:
+      - {{SOURCE_PATH}}:/var/www/html
+    networks:
+      - global_network
+
+networks:
+  global_network:
+    external: true

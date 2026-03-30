@@ -1,0 +1,6 @@
+.idea/
+
+docker-system/.env
+docker-system/nginx/logs/*
+docker-system/nginx/conf.d/*
+projects/*

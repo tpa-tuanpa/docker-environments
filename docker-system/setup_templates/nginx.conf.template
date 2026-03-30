@@ -1,0 +1,16 @@
+server {
+    listen 80;
+    server_name {{PROJECT_NAME}}.test;
+    root /var/www/html;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass app_{{PROJECT_NAME}}:9000;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+}
