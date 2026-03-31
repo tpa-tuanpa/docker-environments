@@ -7,8 +7,8 @@ services:
     volumes:
       - {{SOURCE_PATH}}:/var/www/html
     networks:
-      - global_network
+      - ${GLOBAL_NETWORK_NAME}
 
 networks:
-  global_network:
+  ${GLOBAL_NETWORK_NAME}:
     external: true

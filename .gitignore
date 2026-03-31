@@ -1,6 +1,12 @@
 .idea/
 
 docker-system/.env
+
 docker-system/nginx/logs/*
+!docker-system/nginx/logs/.gitkeep
+
 docker-system/nginx/conf.d/*
+!docker-system/nginx/conf.d/.gitkeep
+
 projects/*
+!projects/.gitkeep

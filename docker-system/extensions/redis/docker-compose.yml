@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  redis_{{PROJECT_NAME}}:
+    image: redis:alpine
+    container_name: {{PROJECT_NAME}}_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - ${GLOBAL_NETWORK_NAME}

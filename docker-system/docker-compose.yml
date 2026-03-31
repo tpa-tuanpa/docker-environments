@@ -3,7 +3,7 @@ version: '3.8'
 services:
   global_db:
     image: mariadb:11
-    container_name: ${GLOBAL_DB_NAME}
+    container_name: ${GLOBAL_SERVICE_DB_NAME}
     environment:
       MARIADB_ROOT_PASSWORD: ${GLOBAL_DB_ROOT_PASSWORD}
     networks:
@@ -32,7 +32,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     networks:
-      - global_network
+      - ${GLOBAL_NETWORK_NAME}
 
 networks:
   ${GLOBAL_NETWORK_NAME}:

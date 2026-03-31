@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  mailhog_{{PROJECT_NAME}}:
+    image: mailhog/mailhog
+    container_name: {{PROJECT_NAME}}_mailhog
+    ports:
+      - "8025:8025"
+    networks:
+      - ${GLOBAL_NETWORK_NAME}
