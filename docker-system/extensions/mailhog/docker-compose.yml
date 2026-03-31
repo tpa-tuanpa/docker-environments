@@ -7,4 +7,4 @@ services:
     ports:
       - "8025:8025"
     networks:
-      - global_network
+      - ${GLOBAL_NETWORK_NAME}

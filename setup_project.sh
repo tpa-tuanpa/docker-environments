@@ -64,8 +64,14 @@ for EXT_NAME in "${SELECTED_EXTENSIONS[@]}"; do
     COMPOSE_FILES="$COMPOSE_FILES:docker-compose.$EXT_NAME.yml"
 done
 
+# Copy toàn bộ .env của global sang dự án con (nếu có)
+if [ -f "$GLOBAL_PATH/.env" ]; then
+    cp "$GLOBAL_PATH/.env" "$PROJECT_DIR/.env"
+    echo "" >> "$PROJECT_DIR/.env"
+fi
+
 # Lưu biến môi trường cho Docker Compose để tự động nhận tất cả các file được cấu hình
-echo "COMPOSE_FILE=$COMPOSE_FILES" > "$PROJECT_DIR/.env"
+echo "COMPOSE_FILE=$COMPOSE_FILES" >> "$PROJECT_DIR/.env"
 
 # 6. Render Nginx Config vào thư mục global_nginx
 # Lưu ý: Nginx Global cần đọc file này nên ta đẩy thẳng vào volume của nó
