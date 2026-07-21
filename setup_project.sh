@@ -60,6 +60,8 @@ sed -e "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" \
 for EXT_NAME in "${SELECTED_EXTENSIONS[@]}"; do
     EXT_FILE="$PROJECT_DIR/docker-compose.$EXT_NAME.yml"
     sed -e "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" \
+        -e "s|{{PHP_VERSION}}|$PHP_VER|g" \
+        -e "s|{{SOURCE_PATH}}|$SOURCE_PATH|g" \
         -e "s|\${GLOBAL_PATH}|$GLOBAL_PATH|g" \
         "$EXTENSIONS_DIR/$EXT_NAME/docker-compose.yml" > "$EXT_FILE"
     COMPOSE_FILES="$COMPOSE_FILES:docker-compose.$EXT_NAME.yml"

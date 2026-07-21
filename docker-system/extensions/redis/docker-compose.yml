@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   redis_{{PROJECT_NAME}}:
     image: redis:alpine
@@ -7,4 +5,8 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - ${GLOBAL_NETWORK_NAME}
+      - global_network_docker
+
+networks:
+  global_network_docker:
+    external: true

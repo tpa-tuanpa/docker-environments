@@ -1,0 +1,16 @@
+services:
+  node_{{PROJECT_NAME}}:
+    build:
+      context: ${GLOBAL_PATH}/extensions/node
+    container_name: {{PROJECT_NAME}}_node
+    working_dir: /var/www/html
+    volumes:
+      - {{SOURCE_PATH}}:/var/www/html
+    ports:
+      - "5173:5173" # Vite dev server (npm run dev)
+    networks:
+      - global_network_docker
+
+networks:
+  global_network_docker:
+    external: true
