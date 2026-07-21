@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   global_db:
     image: mariadb:11
@@ -7,7 +5,7 @@ services:
     environment:
       MARIADB_ROOT_PASSWORD: ${GLOBAL_DB_ROOT_PASSWORD}
     networks:
-      - ${GLOBAL_NETWORK}
+      - global_network
     volumes:
       - ./mariadb/data:/var/lib/mysql
 
@@ -21,7 +19,7 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/logs:/var/log/nginx
     networks:
-      - ${GLOBAL_NETWORK}
+      - global_network
 
   portainer:
     image: portainer/portainer-ce:latest
@@ -32,9 +30,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     networks:
-      - ${GLOBAL_NETWORK}
+      - global_network
 
 networks:
-  ${GLOBAL_NETWORK}:
+  global_network:
     name: ${GLOBAL_NETWORK} # Đặt tên cố định để các dự án con dễ gọi
     driver: bridge
+
+volumes:
+  portainer_data:

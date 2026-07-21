@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   app_{{PROJECT_NAME}}:
     build:
@@ -7,8 +6,8 @@ services:
     volumes:
       - {{SOURCE_PATH}}:/var/www/html
     networks:
-      - ${GLOBAL_NETWORK_NAME}
+      - global_network_docker
 
 networks:
-  ${GLOBAL_NETWORK_NAME}:
+  global_network_docker:
     external: true
