@@ -22,8 +22,9 @@ select PHP_VER in "${PHP_VERSIONS[@]}"; do
     fi
 done
 
-# 3. Nhập đường dẫn Source code
-read -p "Nhập đường dẫn tuyệt đối đến thư mục Source (index.php): " SOURCE_PATH
+# 3. Nhập đường dẫn Source code (mặc định "./" nếu bỏ trống)
+read -p "Nhập đường dẫn đến thư mục Source (index.php) [mặc định: ./]: " SOURCE_PATH
+SOURCE_PATH="${SOURCE_PATH:-./}"
 
 # 4. Tùy chọn tiện ích mở rộng (Extensions)
 EXTENSIONS_DIR="$GLOBAL_PATH/extensions"
