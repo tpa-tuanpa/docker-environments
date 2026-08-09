@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name {{PROJECT_NAME}}.test;
+    server_name {{PROJECT_NAME}}.local;
     root /var/www/html;
     index index.php;
 

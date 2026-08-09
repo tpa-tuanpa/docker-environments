@@ -11,5 +11,5 @@ docker-system/nginx/logs/*
 docker-system/nginx/conf.d/*
 !docker-system/nginx/conf.d/.gitkeep
 
-projects/*
-!projects/.gitkeep
+docker-projects/*
+!docker-projects/.gitkeep
