@@ -1,13 +1,26 @@
 services:
+  server_{{PROJECT_NAME}}:
+    image: nginx:alpine
+    container_name: server_{{PROJECT_NAME}}
+    volumes:
+      - {{SOURCE_PATH}}:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+    networks:
+      - global_network
+
   app_{{PROJECT_NAME}}:
     build:
       context: ${GLOBAL_PATH}/php/{{PHP_VERSION}}
-    container_name: {{PROJECT_NAME}}_php
+    container_name: app_{{PROJECT_NAME}}
+    expose:
+      - "9000"
     volumes:
       - {{SOURCE_PATH}}:/var/www/html
+    user: "1000:1000"
     networks:
-      - global_network_docker
+      - global_network
 
 networks:
-  global_network_docker:
+  global_network:
     external: true

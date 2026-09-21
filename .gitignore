@@ -8,8 +8,5 @@ docker-system/mariadb/data/*
 docker-system/nginx/logs/*
 !docker-system/nginx/logs/.gitkeep
 
-docker-system/nginx/conf.d/*
-!docker-system/nginx/conf.d/.gitkeep
-
 docker-projects/*
 !docker-projects/.gitkeep
