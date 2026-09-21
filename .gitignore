@@ -2,11 +2,11 @@
 
 docker-system/.env
 
+docker-system/mariadb/data/*
+!docker-system/mariadb/data/.gitkeep
+
 docker-system/nginx/logs/*
 !docker-system/nginx/logs/.gitkeep
 
-docker-system/nginx/conf.d/*
-!docker-system/nginx/conf.d/.gitkeep
-
-projects/*
-!projects/.gitkeep
+docker-projects/*
+!docker-projects/.gitkeep

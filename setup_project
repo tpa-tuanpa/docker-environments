@@ -2,9 +2,9 @@
 
 # Cấu hình đường dẫn gốc
 GLOBAL_PATH="$(pwd)/docker-system"
-PROJECTS_ROOT="$(pwd)/projects"
+PROJECTS_ROOT="$(pwd)/docker-projects"
 
-echo "=== Hệ thống khởi tạo dự án con (Docker Global) ==="
+echo "=== Hệ thống khởi tạo dự án con (Docker Global Architecture) ==="
 
 # 1. Nhập tên dự án
 read -p "Nhập tên dự án (ví dụ: project-a): " PROJECT_NAME
@@ -22,8 +22,10 @@ select PHP_VER in "${PHP_VERSIONS[@]}"; do
     fi
 done
 
-# 3. Nhập đường dẫn Source code
-read -p "Nhập đường dẫn tuyệt đối đến thư mục Source (index.php): " SOURCE_PATH
+# 3. Nhập đường dẫn Source code (mặc định "/home/tuanpa/projects/$PROJECT_NAME" nếu bỏ trống)
+DEFAULT_SOURCE="/home/tuanpa/projects/$PROJECT_NAME"
+read -p "Nhập đường dẫn đến thư mục Source code [mặc định: $DEFAULT_SOURCE]: " SOURCE_PATH
+SOURCE_PATH="${SOURCE_PATH:-$DEFAULT_SOURCE}"
 
 # 4. Tùy chọn tiện ích mở rộng (Extensions)
 EXTENSIONS_DIR="$GLOBAL_PATH/extensions"
@@ -32,7 +34,7 @@ SELECTED_EXTENSIONS=()
 
 if [ -d "$EXTENSIONS_DIR" ]; then
     echo "-----------------------------------------------"
-    echo "Tùy chọn tiện ích mở rộng:"
+    echo "Tùy chọn tiện ích mở rộng (Redis, RabbitMQ, Mailhog...):"
     for EXT_PATH in "$EXTENSIONS_DIR"/*; do
         if [ -d "$EXT_PATH" ]; then
             EXT_NAME=$(basename "$EXT_PATH")
@@ -45,10 +47,11 @@ if [ -d "$EXTENSIONS_DIR" ]; then
     echo "-----------------------------------------------"
 fi
 
-# Tạo thư mục dự án
-mkdir -p "$PROJECT_DIR"
+# Tạo thư mục dự án & thư mục Nginx cho project
+mkdir -p "$PROJECT_DIR/nginx/conf.d"
+mkdir -p "$PROJECT_DIR/nginx/logs"
 
-# 5. Render Docker Compose chính
+# 5. Render Docker Compose chính cho dự án con
 sed -e "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" \
     -e "s|{{PHP_VERSION}}|$PHP_VER|g" \
     -e "s|{{SOURCE_PATH}}|$SOURCE_PATH|g" \
@@ -59,6 +62,8 @@ sed -e "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" \
 for EXT_NAME in "${SELECTED_EXTENSIONS[@]}"; do
     EXT_FILE="$PROJECT_DIR/docker-compose.$EXT_NAME.yml"
     sed -e "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" \
+        -e "s|{{PHP_VERSION}}|$PHP_VER|g" \
+        -e "s|{{SOURCE_PATH}}|$SOURCE_PATH|g" \
         -e "s|\${GLOBAL_PATH}|$GLOBAL_PATH|g" \
         "$EXTENSIONS_DIR/$EXT_NAME/docker-compose.yml" > "$EXT_FILE"
     COMPOSE_FILES="$COMPOSE_FILES:docker-compose.$EXT_NAME.yml"
@@ -73,20 +78,18 @@ fi
 # Lưu biến môi trường cho Docker Compose để tự động nhận tất cả các file được cấu hình
 echo "COMPOSE_FILE=$COMPOSE_FILES" >> "$PROJECT_DIR/.env"
 
-# 6. Render Nginx Config vào thư mục global_nginx
-# Lưu ý: Nginx Global cần đọc file này nên ta đẩy thẳng vào volume của nó
-mkdir -p "$GLOBAL_PATH/nginx/conf.d"
+# 6. Render Nginx Config cho Project
 sed -e "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" \
-    "$GLOBAL_PATH/setup_templates/nginx.conf.template" > "$GLOBAL_PATH/nginx/conf.d/$PROJECT_NAME.conf"
+    "$GLOBAL_PATH/setup_templates/nginx.conf.template" > "$PROJECT_DIR/nginx/conf.d/$PROJECT_NAME.conf"
 
 echo "-----------------------------------------------"
 echo "✅ Đã tạo xong dự án tại: $PROJECT_DIR"
 if [ ${#SELECTED_EXTENSIONS[@]} -gt 0 ]; then
     echo "✅ Đã cài đặt các Extensions: ${SELECTED_EXTENSIONS[*]}"
 fi
-echo "✅ Đã thêm cấu hình Nginx: $GLOBAL_PATH/nginx/conf.d/$PROJECT_NAME.conf"
+echo "✅ Đã khởi tạo cấu hình Nginx dự án: $PROJECT_DIR/nginx/conf.d/$PROJECT_NAME.conf"
+echo "🌐 Nginx Global Wildcard Router sẽ TỰ ĐỘNG nhận diện tên miền: http://$PROJECT_NAME.local"
 echo "🚀 Cách chạy:"
-echo "   1. cd projects/$PROJECT_NAME"
+echo "   1. cd docker-projects/$PROJECT_NAME"
 echo "   2. docker-compose up -d"
-echo "   3. Restart Nginx Global: docker exec global_nginx nginx -s reload"
-echo "   4. Thêm '127.0.0.1 $PROJECT_NAME.test' vào file hosts."
+echo "   3. Thêm '127.0.0.1 $PROJECT_NAME.local' vào file /etc/hosts."
