@@ -5,6 +5,9 @@ docker-system/.env
 docker-system/mariadb/data/*
 !docker-system/mariadb/data/.gitkeep
 
+docker-system/nginx/conf.d/*
+!docker-system/nginx/conf.d/00-default.conf
+!docker-system/nginx/conf.d/00-wildcard-router.conf
 docker-system/nginx/logs/*
 !docker-system/nginx/logs/.gitkeep
 
